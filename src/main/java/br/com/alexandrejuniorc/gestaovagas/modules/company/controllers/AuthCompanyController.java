@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alexandrejuniorc.gestaovagas.modules.company.dto.AuthCompanyDTO;
+
 import br.com.alexandrejuniorc.gestaovagas.modules.company.useCases.AuthCompanyUseCase;
 
 import javax.naming.AuthenticationException;
@@ -22,7 +23,7 @@ public class AuthCompanyController {
     private AuthCompanyUseCase authCompanyUseCase;
 
     @PostMapping("/auth")
-    public ResponseEntity<String> create(@RequestBody AuthCompanyDTO authCompanyDTO) throws AuthenticationException {
+    public ResponseEntity<Object> create(@RequestBody AuthCompanyDTO authCompanyDTO) throws AuthenticationException {
         try {
             var result = this.authCompanyUseCase.execute(authCompanyDTO);
             
