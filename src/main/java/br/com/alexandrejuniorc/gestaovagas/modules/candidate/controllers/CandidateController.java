@@ -16,6 +16,13 @@ import br.com.alexandrejuniorc.gestaovagas.modules.candidate.useCases.CreateCand
 import br.com.alexandrejuniorc.gestaovagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import br.com.alexandrejuniorc.gestaovagas.modules.candidate.useCases.ProfileCandidateUseCase;
 import br.com.alexandrejuniorc.gestaovagas.modules.company.entities.JobEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +54,13 @@ public class CandidateController {
 
     @GetMapping()
     @PreAuthorize("hasRole('CANDIDATE')")
+    @Tag(name = "Candidate", description = "Information about candidate")
+    @Operation(summary = "List of vacancies available to candidates", description = "This function is responsible for listing all available vacancies based on the filter")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = {
+            @Content(array = @ArraySchema(schema = @Schema(implementation = JobEntity.class)))
+        }),
+    })
     public ResponseEntity<Object> profile(HttpServletRequest httpServletRequest) {
         var candidateId = httpServletRequest.getAttribute("candidate_id");
 
