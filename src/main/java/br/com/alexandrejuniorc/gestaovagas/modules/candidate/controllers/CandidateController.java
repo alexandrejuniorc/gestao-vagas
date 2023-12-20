@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alexandrejuniorc.gestaovagas.modules.candidate.CandidateEntity;
+import br.com.alexandrejuniorc.gestaovagas.modules.candidate.dto.ProfileCandidateResponseDTO;
 import br.com.alexandrejuniorc.gestaovagas.modules.candidate.useCases.CreateCandidateUseCase;
 import br.com.alexandrejuniorc.gestaovagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import br.com.alexandrejuniorc.gestaovagas.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -56,11 +57,12 @@ public class CandidateController {
     @GetMapping()
     @PreAuthorize("hasRole('CANDIDATE')")
     @Tag(name = "Candidate", description = "Information about candidate")
-    @Operation(summary = "List of vacancies available to candidates", description = "This function is responsible for listing all available vacancies based on the filter")
+    @Operation(summary = "Candidate Profile", description = "This function is responsible to show the profile of candidate")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", content = {
-            @Content(array = @ArraySchema(schema = @Schema(implementation = JobEntity.class)))
-        }),
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ProfileCandidateResponseDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "User not found")
     })
     @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> profile(HttpServletRequest httpServletRequest) {
@@ -81,6 +83,14 @@ public class CandidateController {
 
     @GetMapping("/job")
     @PreAuthorize("hasRole('CANDIDATE')")
+    @Tag(name = "Candidate", description = "Information about candidate")
+    @Operation(summary = "List of vacancies available to candidates", description = "This function is responsible for listing all available vacancies based on the filter")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(array = @ArraySchema(schema = @Schema(implementation = JobEntity.class)))
+            }),
+    })
+    @SecurityRequirement(name = "jwt_auth")
     public List<JobEntity> findJobByFilter(@RequestParam String filter) {
         return this.listAllJobsByFilterUseCase.execute(filter);
     }
